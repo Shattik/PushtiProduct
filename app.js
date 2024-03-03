@@ -95,9 +95,10 @@ app.post('/product/update', async (req, res) => {
 app.post('/product/add', async (req, res) => {
     try {
         const {name, unit, unit_price, tax_amount, image_link} = req.body;
-        await supabase.any(`INSERT INTO "Product" ("name", "unit", "unitPrice", "taxPercentage", "imageLink") VALUES ($1, $2, $3, $4, $5)`, [name, unit, unit_price, tax_amount, image_link]);
+        let idInfo = await supabase.any(`INSERT INTO "Product" ("name", "unit", "unitPrice", "taxPercentage", "imageLink") VALUES ($1, $2, $3, $4, $5) returning "id"`, [name, unit, unit_price, tax_amount, image_link]);
         const response = {
-            success: true
+            success: true,
+            id: idInfo[0].id
         };
         res.json(response);
     }
